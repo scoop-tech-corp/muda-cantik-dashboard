@@ -42,13 +42,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        // $this->mapApiRoutes();
+
+        // $this->mapWebRoutes();
 
         $this->mapApiAdminRoutes();
 
         $this->mapApiMemberRoutes();
-
-        $this->mapWebRoutes();
 
         $this->mapAdminRoutes();
 
@@ -64,12 +64,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapWebRoutes()
-    {
-        Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
-    }
+    // protected function mapWebRoutes()
+    // {
+    //     Route::middleware('web')
+    //          ->namespace($this->namespace)
+    //          ->group(base_path('routes/web.php'));
+    // }
 
     /**
      * Define the "api" routes for the application.
@@ -78,17 +78,17 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapApiRoutes()
-    {
-        Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
-    }
+    // protected function mapApiRoutes()
+    // {
+    //     Route::prefix('api')
+    //          ->middleware('api')
+    //          ->namespace($this->namespace)
+    //          ->group(base_path('routes/api.php'));
+    // }
 
     protected function mapApiAdminRoutes()
     {
-        Route::prefix('api')
+        Route::prefix('api/admin')
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/admin/api.php'));
@@ -113,7 +113,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapMemberRoutes()
     {
         Route::middleware('web')
-            ->prefix('member')
+            ->prefix('')
             ->namespace($this->namespace)
             ->group(base_path('routes/member/web.php'));
     }
