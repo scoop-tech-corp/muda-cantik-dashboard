@@ -21,20 +21,48 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::post('/auth/signup', 'AuthController@signup');
     Route::post('/auth/signin', 'AuthController@signin');
+
+    Route::get('/tutorial', 'TutorialController@index');
+    Route::get('/tutorial/{id}', 'TutorialController@show');
+
+    Route::group(['middleware' => ['jwt.auth']], function ()
+    {
+        Route::get('/profile', 'UserController@show');
+
+        //tutorial
+        Route::post('/tutorial', 'TutorialController@create');
+        Route::put('/tutorial/{id}', 'TutorialController@update');
+        Route::delete('/tutorial/{id}', 'TutorialController@destroy');
+
+        //komentar
+        Route::post('/comment/{id}', 'CommentController@store');
+
+        //signout
+        Route::post('/auth/signout', 'AuthController@signout');
+
+        //category
+        Route::post('/category','CategoriesController@create');
+        Route::put('/category/{id}','CategoriesController@update');
+        Route::delete('/category/{id}', 'CategoriesController@delete');
+        Route::get('/category/{id}','CategoriesController@getById');
+
+        //tag
+        Route::post('/tag','TagsController@create');
+        Route::get('/tag/{id}','TagsController@getById');
+        Route::get('/tag','TagsController@index');
+        Route::put('/tag/{id}','TagsController@update');
+        Route::delete('/tag/{id}', 'TagsController@delete');
+    });
 });
 
 //categories
-Route::get('/categories','CategoriesController@index');
+Route::get('/category','CategoriesController@index');
 
-Route::get('/categories/{id}','CategoriesController@getById');
+
 
 Route::get('/categories_name','CategoriesController@categories_name');
 
 Route::post('/categories','CategoriesController@create');
-
-Route::put('/categories/{id}','CategoriesController@update');
-
-Route::delete('/categories/{id}', 'CategoriesController@delete');
 
 Route::get('/address/provinsi','AddressController@getProvince');
 

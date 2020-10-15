@@ -15,6 +15,7 @@ class CreateAddressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
             $table->string('Name');
             $table->string('Phone');
             $table->string('Provinsi');
@@ -22,13 +23,15 @@ class CreateAddressesTable extends Migration
             $table->string('Kecamatan');
             $table->string('Kabupaten');
             $table->string('DetailAddress');
-            $table->string('Status_Address');
+            // $table->string('Status_Address');
             $table->boolean('isDeleted')->nullable()->default(false);
             $table->string('created_by');
             $table->string('update_by');
             $table->string('deleted_by');
             $table->timestamp('deleted_at',0)->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

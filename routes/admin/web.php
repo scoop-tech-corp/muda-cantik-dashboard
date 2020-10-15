@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('/dashboard/index');
-});
+// Route::get('/', function () {
+//     return view('/');
+// });
