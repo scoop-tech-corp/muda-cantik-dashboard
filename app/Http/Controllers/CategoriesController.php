@@ -4,81 +4,102 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use Illuminate\Http\Request;
-use Validator;
+use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
     public function index()
     {
-        return response()->json(Categories::get(), 200);
+        return Categories::all();
     }
 
     public function categories_name()
     {
-        return response()->json(Categories::select('CategoriesName')->get(), 200);
+        return Categories::select('categories')->get();
     }
 
     public function create(Request $request)
     {
-        $rules = [
-            'CategoriesName' => 'required|min:3|max:20',
-            'Description' => 'required|min:5'
-        ];
+        $this->validate($request, [
+            'categoriesname' => 'required|min:3|max:20',
+            'description' => 'required|min:5',
+        ]);
 
-        $validator = Validator::make($request->all(), $rules);
+        $category = $request->user()->categories()->create([
+            'categoriesname' => $request->json('categoriesname'),
+            'description' => $request->json('description'),
+            'slug' => Str::slug($request->json('categoriesname')),
+            'message' => $request->json('message'),
+            'created_by' => $request->json('created_by'),
+        ]);
 
-        if($validator->fails())
-        {
-            return response()->json($validator->errors(), 400);
-        }
-
-        $cat = Categories::create($request->all());
-        return response()->json($cat, 201);
+        return $category;
 
     }
 
     public function getById($id)
     {
         $cat = Categories::find($id);
-        if(is_null($cat))
+
+        if (is_null($cat)) {
+            return response()->json(["message" => "Record not found"], 404);
+        }
+
+        return response()->json($cat, 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'categoriesname' => 'required|min:3|max:20',
+            'description' => 'required|min:5',
+        ]);
+
+        $cat = Categories::find($id);
+
+        if (is_null($cat)) {
+            return response()->json(["message" => "Record not found"], 404);
+        }
+
+        if($request->user()->id != $cat->user_id)
         {
-            return response()->json(["message" => "Record not found"],404);
+            return response()->json(["message" => "Cannot edit this data!"], 403);
         }
 
-        return response()->json($cat,200);
-    }
-
-    public function update(request $request, $id)
-    {
-        $catname = $request->catname;
-        $desc = $request->desc;
-        $slg = $request->slg;
-        $msg = $request->msg;
-        $create = $request->create;
-
-        $cat = Categories::find($id);
-        $cat->CategoriesName = $catname;
-        $cat->Description = $desc;
-        $cat->Slug = $slg;
-        $cat->Message = $msg;
-        $cat->update_by = "budi";
-        $cat->deleted_by = "";
-
-        if ($cat->save()) {
-            return new CategoriesResource($cat);
-        }
-
-    }
-
-    public function delete($id)
-    {
-        $cat = Categories::find($id);
-        $cat->isDeleted = 1;
-        $cat->deleted_by = "susi";
+        $cat->categoriesname = $request->categoriesname;
+        $cat->description = $request->description;
+        $cat->slug = Str::slug($request->categoriesname);
+        $cat->message = $request->message;
+        $cat->update_by = $request->update_by;
+        $cat->updated_at = $request->updated_at;
         $cat->save();
 
-        if ($cat->delete()) {
-            return new CategoriesResource($cat);
+        return response()->json(
+            [
+                'Status' => 'Success Update Category',
+            ]
+        );
+
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $cat = Categories::find($id);
+
+        if (is_null($cat)) {
+            return response()->json(["message" => "Record not found"], 404);
         }
+
+        $cat->isDeleted = $request->isDeleted;
+        $cat->deleted_by = $request->deleted_by;
+        $cat->save();
+
+        $cat->delete();
+
+        return response()->json(
+            [
+                'Status' => 'Success Delete Category',
+            ]
+        );
     }
 }

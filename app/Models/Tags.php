@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Validation\Rule;
 
 class Tags extends Model
 {
@@ -15,23 +14,13 @@ class Tags extends Model
 
     protected $guarded = ['id'];
 
-    public static function rules($update = false, $id = null)
+    protected $fillable = [
+        'tagname','description', 'slug','created_by'
+    ];
+
+    public function user()
     {
-        $rules =
-        [
-            'TagsName' => ['required', Rule::unique('Tags')->ignore($id,'id')],
-            'Description' => 'required'
-
-        ];
-
-        if($update)
-        {
-            return $rules;
-        }
-
-        return array_merge($rules,[
-            'TagsName' => 'required|unique:Tags,TagsName'
-        ]);
+        return $this->belongsTo('App\Models\User');
     }
 
 }
