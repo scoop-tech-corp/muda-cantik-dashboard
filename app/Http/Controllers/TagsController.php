@@ -65,11 +65,6 @@ class TagsController extends Controller
             return response()->json(["message" => "Record not found"], 404);
         }
 
-        if($request->user()->id != $tag->user_id)
-        {
-            return response()->json(["message" => "Cannot edit this data!"], 403);
-        }
-
         $tag->tagname = $request->tagname;
         $tag->description = $request->description;
         $tag->slug = Str::slug($request->tagname);

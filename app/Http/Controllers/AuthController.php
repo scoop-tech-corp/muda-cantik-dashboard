@@ -17,22 +17,28 @@ class AuthController extends Controller
             'birthdate' => 'required',
             'email' => 'required|unique:users',
             'password' => 'required',
-            'phonenumber' => 'required|min:10|max:12',
+            'phonenumber' => 'required|numeric|digits_between:10,12',
         ]);
 
-        return User::create([
+        $auth = User::create([
             'username' => $request->json('username'),
             'firstname' => $request->json('firstname'),
             'lastname' => $request->json('lastname'),
             'birthdate' => $request->json('birthdate'),
             'email' => $request->json('email'),
             'password' => bcrypt($request->json('password')),
-            'phonenumber' => $request->json('phonenumber'),
+            'phonenumber' => strval($request->json('phonenumber')),
             'imageprofile' => $request->json('imageprofile'),
             'role' => $request->json('role'),
             'status' => $request->json('status'),
             'update_by' => $request->json('update_by'),
         ]);
+
+        return response()->json(
+            [
+                'Status' => 'Register Success',
+            ]
+        );
     }
 
     public function signin(Request $request)

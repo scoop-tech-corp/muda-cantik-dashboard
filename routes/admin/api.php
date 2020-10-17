@@ -11,7 +11,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -25,8 +25,12 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/tutorial', 'TutorialController@index');
     Route::get('/tutorial/{id}', 'TutorialController@show');
 
-    Route::group(['middleware' => ['jwt.auth']], function ()
-    {
+    Route::get('/address/provinsi', 'AddressController@getProvince');
+    Route::get('/address/kabupaten/{id}', 'AddressController@getKabupaten');
+    Route::get('/address/kecamatan/{id}', 'AddressController@getKecamatan');
+    Route::get('/address/kelurahan/{id}', 'AddressController@getKelurahan');
+
+    Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('/profile', 'UserController@show');
 
         //tutorial
@@ -41,33 +45,29 @@ Route::group(['middleware' => ['api']], function () {
         Route::post('/auth/signout', 'AuthController@signout');
 
         //category
-        Route::post('/category','CategoriesController@create');
-        Route::put('/category/{id}','CategoriesController@update');
+        Route::post('/category', 'CategoriesController@create');
+        Route::put('/category/{id}', 'CategoriesController@update');
         Route::delete('/category/{id}', 'CategoriesController@delete');
-        Route::get('/category/{id}','CategoriesController@getById');
+        Route::get('/category/{id}', 'CategoriesController@getById');
 
         //tag
-        Route::post('/tag','TagsController@create');
-        Route::get('/tag/{id}','TagsController@getById');
-        Route::get('/tag','TagsController@index');
-        Route::put('/tag/{id}','TagsController@update');
+        Route::post('/tag', 'TagsController@create');
+        Route::get('/tag/{id}', 'TagsController@getById');
+        Route::get('/tag', 'TagsController@index');
+        Route::put('/tag/{id}', 'TagsController@update');
         Route::delete('/tag/{id}', 'TagsController@delete');
+
+        //address
+        Route::post('/address', 'AddressController@create');
+        Route::get('/address/{id}', 'AddressController@getById');
+        Route::get('/address/user/{id}', 'AddressController@getByUser');
+        Route::get('/address/{id}', 'AddressController@index');
+        Route::delete('/address/{id}', 'AddressController@delete');
+        Route::put('/address/{id}', 'AddressController@update');
     });
 });
 
 //categories
-Route::get('/category','CategoriesController@index');
+Route::get('/category', 'CategoriesController@index');
 
-
-
-Route::get('/categories_name','CategoriesController@categories_name');
-
-Route::post('/categories','CategoriesController@create');
-
-Route::get('/address/provinsi','AddressController@getProvince');
-
-Route::get('/address/kabupaten/{id}','AddressController@getKabupaten');
-
-Route::get('/address/kecamatan/{id}','AddressController@getKecamatan');
-
-Route::get('/address/kelurahan/{id}','AddressController@getKelurahan');
+Route::get('/categories_name', 'CategoriesController@categories_name');
