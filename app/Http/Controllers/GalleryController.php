@@ -25,4 +25,15 @@ class GalleryController extends Controller
             'description' => 'required|min:5',
         ]);
     }
+
+    public function getById($id)
+    {
+        $cat = Categories::find($id);
+
+        if (is_null($cat)) {
+            return response()->json(["message" => "Record not found"], 404);
+        }
+
+        return response()->json($cat, 200);
+    }
 }
