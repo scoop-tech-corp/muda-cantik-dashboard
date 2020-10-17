@@ -13,18 +13,21 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('Categories', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('CategoriesName');
-            $table->string('Description');
-            $table->string('Slug');
-            $table->string('Message');
+            $table->unsignedBigInteger('user_id');
+            $table->string('categoriesname');
+            $table->string('description');
+            $table->string('slug')->unique();
+            $table->string('message')->nullable();
             $table->boolean('isDeleted')->nullable()->default(false);
             $table->string('created_by');
-            $table->string('update_by');
-            $table->string('deleted_by');
+            $table->string('update_by')->nullable();
+            $table->string('deleted_by')->nullable();
             $table->timestamp('deleted_at',0)->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -35,6 +38,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Categories');
+        Schema::dropIfExists('categories');
     }
 }

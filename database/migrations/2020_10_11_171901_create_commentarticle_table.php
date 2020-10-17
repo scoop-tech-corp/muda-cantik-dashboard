@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTagsTable extends Migration
+class CreateCommentarticleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,21 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('commentarticles', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->text('body');
+            $table->unsignedBigInteger('article_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('tagname');
-            $table->string('slug')->unique();
-            $table->string('description');
+
             $table->boolean('isDeleted')->nullable()->default(false);
             $table->string('created_by');
-            $table->string('update_by')->nullable();
-            $table->string('deleted_by')->nullable();
+            $table->string('update_by');
+            $table->string('deleted_by');
             $table->timestamp('deleted_at',0)->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('article_id')->references('id')->on('articles');
         });
     }
 
@@ -37,6 +38,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('commentarticles');
     }
 }
