@@ -15,7 +15,13 @@ class CategoriesController extends Controller
 
     public function categories_name()
     {
-        return Categories::select('categories')->get();
+        $category = Categories::select('categories')->get();
+
+        if (is_null($category)) {
+            return response()->json(["message" => "Record not found!"], 404);
+        }
+
+        return response()->json($category, 200);
     }
 
     public function create(Request $request)
@@ -33,7 +39,11 @@ class CategoriesController extends Controller
             'created_by' => $request->json('created_by'),
         ]);
 
-        return $category;
+        return response()->json(
+            [
+                'Status' => 'Success Create Category!',
+            ]
+        );
 
     }
 
@@ -42,7 +52,7 @@ class CategoriesController extends Controller
         $cat = Categories::find($id);
 
         if (is_null($cat)) {
-            return response()->json(["message" => "Record not found"], 404);
+            return response()->json(["message" => "Record not found!"], 404);
         }
 
         return response()->json($cat, 200);
@@ -58,7 +68,7 @@ class CategoriesController extends Controller
         $cat = Categories::find($id);
 
         if (is_null($cat)) {
-            return response()->json(["message" => "Record not found"], 404);
+            return response()->json(["message" => "Record not found!"], 404);
         }
 
         if($request->user()->id != $cat->user_id)
@@ -76,7 +86,7 @@ class CategoriesController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Update Category',
+                'Status' => 'Success Update Category!',
             ]
         );
 
@@ -98,7 +108,7 @@ class CategoriesController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Delete Category',
+                'Status' => 'Success Delete Category!',
             ]
         );
     }

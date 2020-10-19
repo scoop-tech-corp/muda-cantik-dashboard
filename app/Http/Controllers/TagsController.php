@@ -15,7 +15,13 @@ class TagsController extends Controller
 
     public function tag_only()
     {
-        return Tags::select('tagname')->get();
+        $tag = Tags::select('tagname')->get();
+
+        if (is_null($tag)) {
+            return response()->json(["message" => "Record not found"], 404);
+        }
+
+        return response()->json($tag, 200);
     }
 
     public function create(request $request)

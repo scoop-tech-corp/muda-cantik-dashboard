@@ -17,9 +17,9 @@ class CreateArticleTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('slug')->unique();
+            $table->string('imagename');
             $table->text('body');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('tag_id');
+            $table->unsignedBigInteger('user_id');            
 
             $table->boolean('isDeleted')->nullable()->default(false);
             $table->string('created_by');
@@ -29,7 +29,6 @@ class CreateArticleTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('tag_id')->references('id')->on('users');
         });
     }
 

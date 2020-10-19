@@ -7,6 +7,7 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
+    //tidak dipakai
     public function store(Request $request, $id)
     {
         $this->validate($request, [
