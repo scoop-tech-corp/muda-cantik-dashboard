@@ -29,6 +29,19 @@ class ArticleController extends Controller
             'title' => 'required',
             'body' => 'required',
         ]);
+
+        $article = $request->user()->tags()->create([
+            'title' => $request->json('title'),
+            'body' => $request->json('body'),
+            'slug' => Str::slug($request->json('title')),
+            'created_by' => $request->json('created_by'),
+        ]);
+
+        return response()->json(
+            [
+                'Status' => 'Success Create Article',
+            ]
+        );
     }
 
     public function update(Request $request, $id)

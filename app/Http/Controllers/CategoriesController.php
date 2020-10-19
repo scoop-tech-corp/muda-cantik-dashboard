@@ -27,7 +27,7 @@ class CategoriesController extends Controller
     public function create(Request $request)
     {
         $this->validate($request, [
-            'categoriesname' => 'required|min:3|max:20',
+            'categoriesname' => 'required|min:3|max:20|unique:categories',
             'description' => 'required|min:5',
         ]);
 

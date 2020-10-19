@@ -28,7 +28,7 @@ class TagsController extends Controller
     {
 
         $this->validate($request, [
-            'tagname' => 'required|min:3|max:20',
+            'tagname' => 'required|min:3|max:20|unique:tags',
             'description' => 'required|min:5',
         ]);
 

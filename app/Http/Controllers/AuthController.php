@@ -14,10 +14,10 @@ class AuthController extends Controller
             'username' => 'required|unique:users',
             'firstname' => 'required',
             'lastname' => 'required',
-            'birthdate' => 'required',
+            'birthdate' => 'required|date_format:yyyy-mm-dd',
             'email' => 'required|unique:users',
             'password' => 'required',
-            'phonenumber' => 'required|numeric|digits_between:10,12',
+            'phonenumber' => 'required|numeric|digits_between:10,12|unique:users',
         ]);
 
         $auth = User::create([
