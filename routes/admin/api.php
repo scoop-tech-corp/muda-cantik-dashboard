@@ -56,6 +56,11 @@ Route::group(['middleware' => ['api']], function () {
         Route::post('/article', 'ArticleController@create');
         Route::delete('/article/{id}', 'ArticleController@delete');
         Route::put('/article/{id}', 'ArticleController@update');
+
+        //gallery
+        Route::post('/gallery', 'GalleryController@create');
+        Route::delete('/gallery/{id}', 'GalleryController@delete');
+        Route::put('/gallery/{id}', 'GalleryController@update');
     });
 });
 

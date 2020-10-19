@@ -9,7 +9,7 @@ class Tags extends Model
 {
     use SoftDeletes;
 
-    protected $table = "Tags";
+    protected $table = "tags";
     protected $dates = ['deleted_at'];
 
     protected $guarded = ['id'];

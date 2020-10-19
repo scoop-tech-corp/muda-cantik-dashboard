@@ -50,7 +50,7 @@ class AddressController extends Controller
         $address = $request->user()->addresses()->create([
             'name' => $request->json('name'),
             'phone' => $request->json('phone'),
-            'provinsi' => strval($request->json('provinsi')),
+            'provinsi' => $request->json('provinsi'),
             'kota' => $request->json('kota'),
             'kecamatan' => $request->json('kecamatan'),
             'kabupaten' => $request->json('kabupaten'),
