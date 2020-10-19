@@ -60,7 +60,7 @@ class AddressController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Create Address',
+                'Status' => 'Success Create Address!',
             ]
         );
     }
@@ -141,6 +141,11 @@ class AddressController extends Controller
 
         $provinsi = json_decode($response, true);
 
+        if(is_null($provinsi))
+        {
+            return response()->json(["message" => "Data not found!"], 404);
+        }
+
         return $provinsi;
     }
 
@@ -151,6 +156,11 @@ class AddressController extends Controller
         $response = $request->getBody()->getContents();
 
         $kabupaten = json_decode($response, true);
+
+        if(is_null($kabupaten))
+        {
+            return response()->json(["message" => "Data not found!"], 404);
+        }
 
         return $kabupaten;
     }
@@ -163,6 +173,11 @@ class AddressController extends Controller
 
         $kecamatan = json_decode($response, true);
 
+        if(is_null($kecamatan))
+        {
+            return response()->json(["message" => "Data not found!"], 404);
+        }
+
         return $kecamatan;
     }
 
@@ -173,6 +188,11 @@ class AddressController extends Controller
         $response = $request->getBody()->getContents();
 
         $kelurahan = json_decode($response, true);
+
+        if(is_null($kelurahan))
+        {
+            return response()->json(["message" => "Data not found!"], 404);
+        }
 
         return $kelurahan;
     }

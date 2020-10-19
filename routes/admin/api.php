@@ -1,22 +1,5 @@
 <?php
 
-// use Illuminate\Http\Request;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
- */
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::group(['middleware' => ['api']], function () {
 
     Route::post('/auth/signup', 'AuthController@signup');
@@ -29,6 +12,10 @@ Route::group(['middleware' => ['api']], function () {
     Route::get('/address/kabupaten/{id}', 'AddressController@getKabupaten');
     Route::get('/address/kecamatan/{id}', 'AddressController@getKecamatan');
     Route::get('/address/kelurahan/{id}', 'AddressController@getKelurahan');
+
+    //article
+    Route::get('/article', 'ArticleController@index');
+    Route::get('/article/{id}', 'ArticleController@getById');
 
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::get('/profile', 'UserController@show');
@@ -64,10 +51,15 @@ Route::group(['middleware' => ['api']], function () {
         Route::get('/address/{id}', 'AddressController@index');
         Route::delete('/address/{id}', 'AddressController@delete');
         Route::put('/address/{id}', 'AddressController@update');
+
+        //article
+        Route::post('/article', 'ArticleController@create');
+        Route::delete('/article/{id}', 'ArticleController@delete');
+        Route::put('/article/{id}', 'ArticleController@update');
     });
 });
 
 //categories
-Route::get('/category', 'CategoriesController@index');
+// Route::get('/category', 'CategoriesController@index');
 
-Route::get('/categories_name', 'CategoriesController@categories_name');
+// Route::get('/categories_name', 'CategoriesController@categories_name');

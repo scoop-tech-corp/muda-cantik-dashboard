@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Register Success',
+                'Status' => 'Register Success!',
             ]
         );
     }
@@ -85,7 +85,7 @@ class AuthController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success',
+                'Status' => 'Success!',
             ]
         );
     }

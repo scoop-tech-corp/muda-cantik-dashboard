@@ -19,7 +19,7 @@ class TutorialController extends Controller
         $tutorial = Tutorial::find($id);
 
         if (is_null($tutorial)) {
-            return response()->json(["message" => "Record not found"], 404);
+            return response()->json(["message" => "Record not found!"], 404);
         }
 
         return response()->json($tutorial, 200);
