@@ -60,7 +60,7 @@ class AddressController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Create Address!',
+                'message' => 'Success Create Address!',
             ]
         );
     }
@@ -101,7 +101,7 @@ class AddressController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Update Address!',
+                'message' => 'Success Update Address!',
             ]
         );
     }
@@ -128,7 +128,7 @@ class AddressController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Delete Address!',
+                'message' => 'Success Delete Address!'
             ]
         );
     }

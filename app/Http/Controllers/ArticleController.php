@@ -39,7 +39,7 @@ class ArticleController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Create Article',
+                'message' => 'Success Create Article',
             ]
         );
     }

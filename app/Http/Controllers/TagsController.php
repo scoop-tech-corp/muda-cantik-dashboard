@@ -41,7 +41,7 @@ class TagsController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Create Tag',
+                'message' => 'Success Create Tag',
             ]
         );
 
@@ -80,7 +80,7 @@ class TagsController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Update Tag',
+                'message' => 'Success Update Tag',
             ]
         );
     }
@@ -101,7 +101,7 @@ class TagsController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Delete Tag',
+                'message' => 'Success Delete Tag',
             ]
         );
     }

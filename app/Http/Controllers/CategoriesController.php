@@ -41,7 +41,7 @@ class CategoriesController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Create Category!',
+                'message' => 'Success Create Category!',
             ]
         );
 
@@ -86,7 +86,7 @@ class CategoriesController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Update Category!',
+                'message' => 'Success Update Category!',
             ]
         );
 
@@ -108,7 +108,7 @@ class CategoriesController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success Delete Category!',
+                'message' => 'Success Delete Category!',
             ]
         );
     }
