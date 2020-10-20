@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
+    protected $table = "articles";
+
+    protected $guarded = ['id'];
+
     protected $fillable = [
-        'title', 'slug', 'body',
+        'title', 'slug', 'body','gallery_id','user_id',
+        'category_id'
     ];
 
     public function user()
@@ -20,8 +25,13 @@ class Article extends Model
         return $this->hasMany('App\Models\CommentArticle');
     }
 
-    public function tags()
+    public function gallery()
     {
-        return $this->hasMany('App\Models\Tags');
+        return $this->belongsTo('App\Models\Gallery');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Categories');
     }
 }

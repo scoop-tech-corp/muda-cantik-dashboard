@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Register Success!',
+                'message' => 'Register Success!',
             ]
         );
     }
@@ -55,11 +55,18 @@ class AuthController extends Controller
         try {
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => [
+                        'password' => ['The password or username you entered is wrong.']
+                    ]], 401);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response()->json([
+                'message' => 'Could not create token.'
+            ], 500);
+            //return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
         $user = User::find($request->user()->id);
@@ -69,7 +76,7 @@ class AuthController extends Controller
             [
                 'user_id' => $request->user()->id,
                 'token' => $token,
-                'username'=> $user->username,
+                'username' => $user->username,
                 'firstname' => $user->firstname,
                 'lastname' => $user->lastname,
                 'email' => $user->email,
@@ -95,7 +102,7 @@ class AuthController extends Controller
 
         return response()->json(
             [
-                'Status' => 'Success!',
+                'message' => 'Success!',
             ]
         );
     }
