@@ -62,11 +62,21 @@ class AuthController extends Controller
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
+        $user = User::find($request->user()->id);
+
         // all good so return the token
         return response()->json(
             [
                 'user_id' => $request->user()->id,
                 'token' => $token,
+                'username'=> $user->username,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
+                'email' => $user->email,
+                'phonenumber' => $user->phonenumber,
+                'imageprofile' => $user->imageprofile,
+                'role' => $user->role,
+
             ]
         );
     }
