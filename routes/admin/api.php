@@ -31,6 +31,12 @@ Route::group(['middleware' => ['api']], function () {
         //signout
         Route::post('/auth/signout', 'AuthController@signout');
 
+        //user
+        Route::get('/user/all/{id}', 'UserController@index');
+        Route::get('/user/{id}', 'UserController@getByUser');
+        Route::put('/user/verified/{id}', 'UserController@VerifiedAdmin');
+        Route::put('/user/activation/{id}', 'UserController@Activation');
+
         //category
         Route::post('/category', 'CategoriesController@create');
         Route::put('/category/{id}', 'CategoriesController@update');
@@ -48,7 +54,7 @@ Route::group(['middleware' => ['api']], function () {
         Route::post('/address', 'AddressController@create');
         Route::get('/address/{id}', 'AddressController@getById');
         Route::get('/address/user/{id}', 'AddressController@getByUser');
-        Route::get('/address/{id}', 'AddressController@index');
+        Route::get('/address', 'AddressController@index');
         Route::delete('/address/{id}', 'AddressController@delete');
         Route::put('/address/{id}', 'AddressController@update');
 
