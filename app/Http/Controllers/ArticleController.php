@@ -9,7 +9,8 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        return Article::all();
+        $article = Article::all();
+        return response()->json($article, 200);
     }
 
     public function getById($id)
@@ -30,17 +31,21 @@ class ArticleController extends Controller
             'body' => 'required',
         ]);
 
-        $article = $request->user()->tags()->create([
+        $article = $request->user()->article()->create([
             'title' => $request->json('title'),
             'body' => $request->json('body'),
             'slug' => Str::slug($request->json('title')),
             'created_by' => $request->json('created_by'),
         ]);
 
+        foreach($article as $key => $value){
+            
+        }
+
         return response()->json(
             [
                 'message' => 'Success Create Article',
-            ]
+            ], 200
         );
     }
 
@@ -52,5 +57,10 @@ class ArticleController extends Controller
     public function delete(Request $request,$id)
     {
 
+    }
+
+    public function getByTag(Request $request)
+    {
+        
     }
 }
