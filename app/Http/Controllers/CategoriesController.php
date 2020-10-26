@@ -8,17 +8,38 @@ use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Categories::all();
+        if ($request->user()->role == 'user') {
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => [
+                    'user' => ['Access is not allowed!'],
+                ]], 403);
+        }
+        
+        $categories = Categories::all();
+        return response()->json($categories, 200);
     }
 
-    public function categories_name()
+    public function categories_name(Request $request)
     {
+        if ($request->user()->role == 'user') {
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => [
+                    'user' => ['Access is not allowed!'],
+                ]], 403);
+        }
+
         $category = Categories::select('categories')->get();
 
         if (is_null($category)) {
-            return response()->json(["message" => "Record not found!"], 404);
+            return response()->json([
+                'message' => 'The data was invalid.',
+                'errors' => [
+                    'data' => ['Data not found!']
+                ]], 404);
         }
 
         return response()->json($category, 200);
@@ -42,17 +63,29 @@ class CategoriesController extends Controller
         return response()->json(
             [
                 'message' => 'Success Create Category!',
-            ]
+            ],200
         );
 
     }
 
-    public function getById($id)
+    public function getById(Request $request, $id)
     {
+        if ($request->user()->role == 'user') {
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => [
+                    'user' => ['Access is not allowed!'],
+                ]], 403);
+        }
+
         $cat = Categories::find($id);
 
         if (is_null($cat)) {
-            return response()->json(["message" => "Record not found!"], 404);
+            return response()->json([
+                'message' => 'The data was invalid.',
+                'errors' => [
+                    'data' => ['Data not found!']
+                ]], 404);
         }
 
         return response()->json($cat, 200);
@@ -68,12 +101,20 @@ class CategoriesController extends Controller
         $cat = Categories::find($id);
 
         if (is_null($cat)) {
-            return response()->json(["message" => "Record not found!"], 404);
+            return response()->json([
+                'message' => 'The data was invalid.',
+                'errors' => [
+                    'data' => ['Data not found!']
+                ]], 404);
         }
 
         if($request->user()->id != $cat->user_id)
         {
-            return response()->json(["message" => "Cannot edit this data!"], 403);
+            return response()->json([
+                'message' => 'The user was invalid.',
+                'errors' => [
+                    'user' => ['Access is not allowed!']
+                ]], 403);
         }
 
         $cat->categoriesname = $request->categoriesname;
@@ -87,17 +128,29 @@ class CategoriesController extends Controller
         return response()->json(
             [
                 'message' => 'Success Update Category!',
-            ]
+            ],200
         );
 
     }
 
     public function delete(Request $request, $id)
     {
+        if ($request->user()->role == 'user') {
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => [
+                    'user' => ['Access is not allowed!'],
+                ]], 403);
+        }
+
         $cat = Categories::find($id);
 
         if (is_null($cat)) {
-            return response()->json(["message" => "Record not found"], 404);
+            return response()->json([
+                'message' => 'The data was invalid.',
+                'errors' => [
+                    'data' => ['Data not found!']
+                ]], 404);
         }
 
         $cat->isDeleted = $request->isDeleted;
@@ -109,7 +162,7 @@ class CategoriesController extends Controller
         return response()->json(
             [
                 'message' => 'Success Delete Category!',
-            ]
+            ],200
         );
     }
 }

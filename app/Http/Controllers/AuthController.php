@@ -14,7 +14,7 @@ class AuthController extends Controller
             'username' => 'required|unique:users',
             'firstname' => 'required',
             'lastname' => 'required',
-            'birthdate' => 'required|date_format:yyyy-mm-dd',
+            'birthdate' => 'required|date:yyyy-mm-dd',
             'email' => 'required|unique:users',
             'password' => 'required',
             'phonenumber' => 'required|numeric|digits_between:10,12|unique:users',
@@ -58,18 +58,32 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => 'The given data was invalid.',
                     'errors' => [
-                        'password' => ['The password or username you entered is wrong.']
+                        'password' => ['The password or username you entered is wrong!'],
                     ]], 401);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response()->json([
-                'message' => 'Could not create token.'
+                'message' => 'Could not create token!',
             ], 500);
             //return response()->json(['error' => 'could_not_create_token'], 500);
         }
 
         $user = User::find($request->user()->id);
+
+        if ($user->role == 'admin' && $user->isVerified == false) {
+            return response()->json([
+                'message' => 'The user was invalid.',
+                'errors' => [
+                    'user' => ['This account is still not usable! Please contact admin for more info.'],
+                ]], 403);
+        } elseif ($user->role == 'admin' && $user->status == 'inactive') {
+            return response()->json([
+                'message' => 'The user was invalid.',
+                'errors' => [
+                    'user' => ['This account can no longer be used!'],
+                ]], 403);
+        }
 
         // all good so return the token
         return response()->json(
@@ -102,7 +116,7 @@ class AuthController extends Controller
 
         return response()->json(
             [
-                'message' => 'Success!',
+                'message' => 'Success Logout!',
             ]
         );
     }
