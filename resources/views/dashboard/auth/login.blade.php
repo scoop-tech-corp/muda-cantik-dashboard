@@ -24,38 +24,61 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 
+  <!-- Vue JS -->
+  <script src="{{ asset('vuejs/vue.js') }}"></script>
+
+  <!-- Axios  -->
+  <script src="{{ asset('vuejs/axios.js') }}"></script>
+
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+  <link rel="stylesheet" type='text/css' href="{{ asset('main/dashboard/alert-custom.css') }}">
+  <link rel="stylesheet" type='text/css' href="{{ asset('main/dashboard/input-custom.css') }}">
 </head>
 <body class="hold-transition login-page">
-<div class="login-box">
+<div class="login-box" id="login-app">
+  <input ref="baseUrl" type="hidden" value="{{ url('/') }}"/>
   <div class="login-logo">
     <a href="#"><b>MUDA</b> CANTIK</a>
+  </div>
+  <div v-if="showAlert" class="alert alert-dismissible"
+    v-bind:class="{ 'alert-success': isSuccess, 'alert-danger': !isSuccess }">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa" v-bind:class="{ 'fa-check': isSuccess, 'fa-ban': !isSuccess }"></i> Alert!</h4>
+    @{{message}}
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
 
-    <form action="" method="post">
+    <form>
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
+        <input type="text" class="form-control" :class="{'error-form-control' : usernameError}"
+          @keyup="usernameKeyup" placeholder="Username" v-model="form.username">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        <span class="validate-error">@{{usernameError ? 'Username is required' : ''}}</span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input type="password" class="form-control" :class="{'error-form-control' : passwordError}"
+          @keyup="passwordKeyup" placeholder="Password" v-model="form.password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <span class="validate-error">@{{passwordError ? 'Password is required' : ''}}</span>
       </div>
       <div class="row">
         <div class="col-xs-8">
-          <div class="checkbox icheck">
+          {{-- <div class="checkbox icheck">
             <label>
               <input type="checkbox"> Remember Me
             </label>
-          </div>
+          </div> --}}
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+          {{-- :disabled="disableSubmit" --}}
+          {{-- (!this.usernameError || !this.passwordError) ? 0 : 1 --}}
+          <button type="button"  :disabled="disableSubmit" 
+          class="btn btn-primary btn-block btn-flat" @click="onSubmit">Sign In</button>
         </div>
         <!-- /.col -->
       </div>
@@ -93,5 +116,6 @@
     });
   });
 </script>
+<script src="{{ asset('main/dashboard/auth/login-vue.js') }}"></script>
 </body>
 </html>
