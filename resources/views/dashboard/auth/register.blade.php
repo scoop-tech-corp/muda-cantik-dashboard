@@ -16,6 +16,10 @@
   <link rel="stylesheet" href="{{ asset('dist/css/AdminLTE.min.css') }}">
   <!-- iCheck -->
   <link rel="stylesheet" href="{{ asset('plugins/iCheck/square/blue.css') }}">
+  <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+  <!-- jQuery 3 -->
+  <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,69 +28,93 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 
+  <!-- Vue JS -->
+  <script src="{{ asset('vuejs/vue.js') }}"></script>
+
+  <!-- Axios  -->
+  <script src="{{ asset('vuejs/axios.js') }}"></script>
+
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+  <!-- Register Custom Css -->
+  <link rel="stylesheet" type='text/css' href="{{ asset('main/dashboard/auth/register.css') }}">
+  <link rel="stylesheet" type='text/css' href="{{ asset('main/dashboard/alert-custom.css') }}">
 </head>
 <body class="hold-transition register-page">
-<div class="register-box">
+<div id="register-app" class="register-box">
+  <input ref="baseUrl" type="hidden" value="{{ url('/') }}"/>
   <div class="register-logo">
     <a href="#"><b>MUDA</b> CANTIK</a>
   </div>
-
+  <div v-if="showAlert" class="alert alert-dismissible"
+    v-bind:class="{ 'alert-success': isSuccess, 'alert-danger': !isSuccess }">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa" v-bind:class="{ 'fa-check': isSuccess, 'fa-ban': !isSuccess }"></i> Alert!</h4>
+    @{{message}}
+  </div>
   <div class="register-box-body">
-    <p class="login-box-msg">Register a new membership</p>
+    <p class="login-box-msg">Register a new account admin</p>
 
-    <form action="#" method="post">
+    <form>
       <div class="form-group has-feedback">
-        <input type="text" class="form-control" placeholder="Full name">
+        <input type="text" class="form-control" placeholder="Username" v-model="form.username">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
+      <div class="row form-group has-feedback">
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="First Name" v-model="form.firstname">
+          <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Last Name" v-model="form.lastname">
+          <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+      </div>
+      <div class="form-group has-feedback container-datepicker">
+        <input type="text" class="form-control txt-datepicker" placeholder="Date Of Birth">
+        <span class="glyphicon glyphicon-calendar form-control-feedback"></span>
+      </div>
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Email">
+        <input type="email" class="form-control" placeholder="Email" v-model="form.email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
+        <input type="password" class="form-control" placeholder="Password" v-model="form.password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Retype password">
-        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+        <input type="number" min="0" maxlength="8" class="form-control" placeholder="Phone Number" v-model="form.phone">
+        <span class="glyphicon glyphicon-earphone form-control-feedback"></span>
       </div>
-      <div class="row">
-        <div class="col-xs-8">
-          <div class="checkbox icheck">
-            <label>
-              <input type="checkbox"> I agree to the <a href="#">terms</a>
-            </label>
-          </div>
+      <div class="form-group">
+        <label for="photo">Photo</label>
+        <input type="file" id="input-photo" @change="onFileChange">
+
+        <p class="help-block">validation text in here.</p>
+      </div>
+      <div class="row form-group">
+        <div class="col-md-12">
+          <button type="button" class="btn btn-primary btn-block btn-flat" @click="onSubmit">Register</button>
         </div>
-        <!-- /.col -->
-        <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
-        </div>
-        <!-- /.col -->
       </div>
     </form>
 
-    <div class="social-auth-links text-center">
-      <p>- OR -</p>
-      <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign up using
-        Facebook</a>
-      <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign up using
-        Google+</a>
+    <div class="row">
+      <div class="col-xs-12">
+        <a href="{{ url('/admin/login') }}" class="text-center">I already have account admin</a>
+      </div>
     </div>
-
-    <a href="{{ url('/admin/login') }}" class="text-center">I already have a membership</a>
   </div>
+
   <!-- /.form-box -->
 </div>
 <!-- /.register-box -->
 
-<!-- jQuery 3 -->
-<script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ asset('bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<!-- bootstrap datepicker -->
+<script src="{{ asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 <!-- iCheck -->
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 <script>
@@ -96,7 +124,12 @@
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' /* optional */
     });
+
+    //Date picker set comment because datepicker declare in vuejs mounted
+    // $('.txt-datepicker').datepicker();
   });
 </script>
+
+<script src="{{ asset('main/dashboard/auth/register-vue.js') }}"></script>
 </body>
 </html>
