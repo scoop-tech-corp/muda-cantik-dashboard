@@ -105,11 +105,10 @@ class AuthController extends Controller
     public function signout(Request $request)
     {
         $this->validate($request, [
-            'username' => 'required',
-            'password' => 'required',
+            'username' => 'required'
         ]);
 
-        $credentials = $request->only('username', 'password');
+        $credentials = $request->only('username');
         $token = null;
 
         $token = JWTAuth::invalidate($credentials);
