@@ -5,18 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use JWTAuth;
+use Validator;
 
 class AuthController extends Controller
 {
     public function signup(Request $request)
     {
         $this->validate($request, [
-            'username' => 'required|unique:users',
-            'firstname' => 'required',
-            'lastname' => 'required',
+            'username' => 'required|min:3|max:25|unique:users',
+            'firstname' => 'required|min:3|max:25',
+            'lastname' => 'required|min:3|max:25',
             'birthdate' => 'required|date:yyyy-mm-dd',
-            'email' => 'required|unique:users',
-            'password' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
             'phonenumber' => 'required|numeric|digits_between:10,12|unique:users',
         ]);
 
@@ -43,10 +44,21 @@ class AuthController extends Controller
 
     public function signin(Request $request)
     {
-        $this->validate($request, [
+
+        $validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->messages();
+
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' =>
+                $errors,
+            ], 401);
+        }
 
         // grab credentials from the request
         $credentials = $request->only('username', 'password');
@@ -57,9 +69,8 @@ class AuthController extends Controller
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
                     'message' => 'The given data was invalid.',
-                    'errors' => [
-                        'password' => ['The password or username you entered is wrong!'],
-                    ]], 401);
+                    'errors' => ['The password or username you entered is wrong!'],
+                ], 401);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
@@ -74,15 +85,13 @@ class AuthController extends Controller
         if ($user->role == 'admin' && $user->isVerified == false) {
             return response()->json([
                 'message' => 'The user was invalid.',
-                'errors' => [
-                    'user' => ['This account is still not usable! Please contact admin for more info.'],
-                ]], 403);
+                'errors' => ['This account is still not usable! Please contact admin for more info.'],
+            ], 403);
         } elseif ($user->role == 'admin' && $user->status == 'inactive') {
             return response()->json([
                 'message' => 'The user was invalid.',
-                'errors' => [
-                    'user' => ['This account can no longer be used!'],
-                ]], 403);
+                'errors' => ['This account can no longer be used!'],
+            ], 403);
         }
 
         // all good so return the token
@@ -105,7 +114,7 @@ class AuthController extends Controller
     public function signout(Request $request)
     {
         $this->validate($request, [
-            'username' => 'required'
+            'username' => 'required',
         ]);
 
         $credentials = $request->only('username');
