@@ -15,12 +15,26 @@ class Tags extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'tagname','description', 'slug','created_by'
+        'tagname', 'description', 'slug', 'created_by',
     ];
 
     public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    // public function articledetail()
+    // {
+    //     return $this->hasMany('App\Models\ArticleDetail');
+    // }
+
+    // public function articles()
+    // {
+    //     return $this->belongsTo(
+    //         Tags::class,
+    //         'articlesdetail',
+    //         'articles_id',
+    //         'tag_id');
+    // }
 
 }

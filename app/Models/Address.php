@@ -15,8 +15,8 @@ class Address extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'name','phone', 'provinsi','kota','kecamatan',
-        'kabupaten','detailAddress','created_by'
+        'name', 'phone', 'provinsi', 'kota', 'kecamatan',
+        'kabupaten', 'detailAddress', 'created_by',
     ];
 
     public function user()

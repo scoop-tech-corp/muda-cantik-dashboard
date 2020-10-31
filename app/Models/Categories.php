@@ -15,7 +15,7 @@ class Categories extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'categoriesname','description', 'slug', 'message','created_by'
+        'categoriesname', 'description', 'slug', 'message', 'created_by',
     ];
 
     public function user()

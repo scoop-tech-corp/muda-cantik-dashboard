@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Article;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
     public function index()
     {
-        $article = Article::all();
+        $article = Article::with('articlesdetail')->get();
+
         return response()->json($article, 200);
     }
 
@@ -26,20 +28,41 @@ class ArticleController extends Controller
 
     public function create(request $request)
     {
+        if ($request->user()->role == 'user') {
+
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => [
+                    'user' => ['Access is not allowed!'],
+                ]], 403);
+        }
+
         $this->validate($request, [
-            'title' => 'required',
+            'title' => 'required|unique:articles',
             'body' => 'required',
+            'gallery_id' => 'required',
+            'category_id' => 'required',
+            'tag' => 'required',
         ]);
 
         $article = $request->user()->article()->create([
             'title' => $request->json('title'),
             'body' => $request->json('body'),
+            'gallery_id' => $request->json('gallery_id'),
+            'category_id' => $request->json('category_id'),
             'slug' => Str::slug($request->json('title')),
-            'created_by' => $request->json('created_by'),
+            'created_by' => $request->user()->firstname . ' ' . $request->user()->lastname,
         ]);
 
-        foreach($article as $key => $value){
-            
+        $tags = $request->tag;
+
+        foreach ($tags as $key) {
+
+            $request->user()->articledetail()->create([
+
+                'tag_id' => $key,
+                'article_id' => $article->id,
+            ]);
         }
 
         return response()->json(
@@ -54,13 +77,13 @@ class ArticleController extends Controller
 
     }
 
-    public function delete(Request $request,$id)
+    public function delete(Request $request, $id)
     {
 
     }
 
     public function getByTag(Request $request)
     {
-        
+
     }
 }

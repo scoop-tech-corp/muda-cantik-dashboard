@@ -16,11 +16,13 @@ class CreateArticlesDetailTable extends Migration
         Schema::create('articlesdetail', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('tag_id');
-            $table->unsignedBigInteger('articles_id');
+            $table->unsignedBigInteger('article_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();            
 
             $table->foreign('tag_id')->references('id')->on('tags');
-            $table->foreign('articles_id')->references('id')->on('articles');
+            $table->foreign('article_id')->references('id')->on('articles');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
