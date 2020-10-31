@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -17,8 +16,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'username','firstname','lastname','birthdate','email', 'password',
-        'phonenumber','imageprofile','role','status','update_by'
+        'username', 'firstname', 'lastname', 'birthdate', 'email', 'password',
+        'phonenumber', 'imageprofile', 'role', 'status', 'update_by',
     ];
 
     /**
@@ -52,6 +51,11 @@ class User extends Authenticatable implements JWTSubject
     public function article()
     {
         return $this->hasMany('App\Models\Article');
+    }
+
+    public function articledetail()
+    {
+        return $this->hasMany('App\Models\ArticleDetail');
     }
 
     public function commentarticle()

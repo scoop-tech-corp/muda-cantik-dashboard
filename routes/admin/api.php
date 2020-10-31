@@ -32,16 +32,20 @@ Route::group(['middleware' => ['api']], function () {
         Route::post('/auth/signout', 'AuthController@signout');
 
         //user
-        Route::get('/user/all/{id}', 'UserController@index');
+        Route::get('/user/all', 'UserController@index');
         Route::get('/user/{id}', 'UserController@getByUser');
         Route::put('/user/verified/{id}', 'UserController@VerifiedAdmin');
-        Route::put('/user/activation/{id}', 'UserController@Activation');
+        Route::put('/user/inactive/{id}', 'UserController@Inactive');
+        Route::put('/user/active/{id}', 'UserController@Active');
+        Route::put('/user/{id}', 'UserController@Update');
 
         //category
         Route::post('/category', 'CategoriesController@create');
         Route::put('/category/{id}', 'CategoriesController@update');
         Route::delete('/category/{id}', 'CategoriesController@delete');
         Route::get('/category/{id}', 'CategoriesController@getById');
+        Route::get('/category', 'CategoriesController@index');
+        Route::get('/categories_name', 'CategoriesController@categories_name');
 
         //tag
         Route::post('/tag', 'TagsController@create');
@@ -69,8 +73,3 @@ Route::group(['middleware' => ['api']], function () {
         Route::put('/gallery/{id}', 'GalleryController@update');
     });
 });
-
-//categories
-// Route::get('/category', 'CategoriesController@index');
-
-// Route::get('/categories_name', 'CategoriesController@categories_name');

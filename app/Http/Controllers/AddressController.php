@@ -6,17 +6,18 @@ use App\Models\Address;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Validator;
 
 class AddressController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->user()->role == 'user' || $request->user()->role == 'admin') {
+        if ($request->user()->role == 'admin' || $request->user()->role == 'user') {
+
             return response()->json([
                 'message' => 'The user role was invalid.',
-                'errors' => [
-                    'user' => ['Access is not allowed!'],
-                ]], 403);
+                'errors' => ['Access is not allowed!'],
+            ], 403);
         }
         $address = Address::all();
 
@@ -25,41 +26,29 @@ class AddressController extends Controller
 
     public function getByUser(Request $request, $id)
     {
-        if ($request->user()->role == 'admin' || $request->user()->role == 'user') {
-
-            if ($request->user()->id != $id) {
-
-                return response()->json([
-                    'message' => 'The user role was invalid.',
-                    'errors' => [
-                        'user' => ['Access is not allowed!'],
-                    ]], 403);
-                    
-            } else {
-
-                $address = Address::find($id);
-
-                if (is_null($address)) {
-                    return response()->json([
-                        'message' => 'The data was invalid.',
-                        'errors' => [
-                            'data' => ['Data not found!'],
-                        ]], 404);
-                }
-
-                return response()->json($address, 200);
-            }
-
-        }
-
         $address = Address::find($id);
 
         if (is_null($address)) {
             return response()->json([
                 'message' => 'The data was invalid.',
-                'errors' => [
-                    'data' => ['Data not found!'],
-                ]], 404);
+                'errors' => ['Data not found!'],
+            ], 404);
+        }
+
+        if ($request->user()->role == 'admin' || $request->user()->role == 'user') {
+
+            if ($request->user()->id != $address->user_id) {
+
+                return response()->json([
+                    'message' => 'The user role was invalid.',
+                    'errors' => ['Access is not allowed!'],
+                ], 403);
+
+            } else {
+
+                return response()->json($address, 200);
+            }
+
         }
 
         return response()->json($address, 200);
@@ -68,7 +57,7 @@ class AddressController extends Controller
     public function create(request $request)
     {
 
-        $this->validate($request, [
+        $validate = Validator::make($request->all(), [
 
             'name' => 'required|min:3|max:25',
             'phone' => 'required|numeric|digits_between:10,12',
@@ -79,6 +68,15 @@ class AddressController extends Controller
             'detailAddress' => 'required|min:10|max:200',
         ]);
 
+        if ($validate->fails()) {
+            $errors = $validate->errors()->all();
+
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $errors,
+            ], 401);
+        }
+
         $address = $request->user()->addresses()->create([
             'name' => $request->json('name'),
             'phone' => $request->json('phone'),
@@ -87,7 +85,7 @@ class AddressController extends Controller
             'kecamatan' => $request->json('kecamatan'),
             'kabupaten' => $request->json('kabupaten'),
             'detailAddress' => $request->json('detailAddress'),
-            'created_by' => $request->json('created_by'),
+            'created_by' => $request->user()->firstname . ' ' . $request->user()->lastname,
         ]);
 
         return response()->json(
@@ -99,7 +97,9 @@ class AddressController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+
+        $validate = Validator::make($request->all(), [
+
             'name' => 'required|min:3|max:25',
             'phone' => 'required|numeric|digits_between:10,12',
             'provinsi' => 'required',
@@ -109,22 +109,29 @@ class AddressController extends Controller
             'detailAddress' => 'required|min:10|max:200',
         ]);
 
+        if ($validate->fails()) {
+            $errors = $validate->errors()->all();
+
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $errors,
+            ], 401);
+        }
+
         $address = Address::find($id);
 
         if (is_null($address)) {
             return response()->json([
                 'message' => 'The data was invalid.',
-                'errors' => [
-                    'data' => ['Data not found!'],
-                ]], 404);
+                'errors' => ['Data not found!'],
+            ], 404);
         }
 
         if ($request->user()->id != $address->user_id) {
             return response()->json([
                 'message' => 'The user role was invalid.',
-                'errors' => [
-                    'user' => ['Access is not allowed!'],
-                ]], 403);
+                'errors' => ['Access is not allowed!'],
+            ], 403);
         }
 
         $address->name = $request->name;
@@ -134,8 +141,8 @@ class AddressController extends Controller
         $address->kecamatan = $request->kecamatan;
         $address->kabupaten = $request->kabupaten;
         $address->detailAddress = $request->detailAddress;
-        $address->update_by = $request->update_by;
-        $address->updated_at = $request->updated_at;
+        $address->update_by = $request->user()->firstname . ' ' . $request->user()->lastname;
+        $address->updated_at = \Carbon\Carbon::now();
         $address->save();
 
         return response()->json(
@@ -152,25 +159,23 @@ class AddressController extends Controller
         if (is_null($address)) {
             return response()->json([
                 'message' => 'The data was invalid.',
-                'errors' => [
-                    'data' => ['Data not found!'],
-                ]], 404);
+                'errors' => ['Data not found!'],
+            ], 404);
         }
 
-        if($request->user()->role != 'superadmin')
-        {
+        if ($request->user()->role != 'superadmin') {
             if ($request->user()->id != $address->user_id) {
                 return response()->json([
                     'message' => 'The user role was invalid.',
-                    'errors' => [
-                        'user' => ['Access is not allowed!'],
-                    ]], 403);
+                    'errors' => ['Access is not allowed!'],
+                ], 403);
             }
 
-        }        
+        }
 
         $address->isDeleted = $request->isDeleted;
-        $address->deleted_by = $request->deleted_by;
+        $address->deleted_by = $request->user()->firstname . ' ' . $request->user()->lastname;
+        $address->deleted_at = \Carbon\Carbon::now();
         $address->save();
 
         $address->delete();
@@ -193,12 +198,11 @@ class AddressController extends Controller
         if (is_null($provinsi)) {
             return response()->json([
                 'message' => 'The data was invalid.',
-                'errors' => [
-                    'provinsi' => ['Data not found!'],
-                ]], 404);
+                'errors' => ['Data not found!'],
+            ], 404);
         }
 
-        return response()->json($kabupaten, 200);
+        return response()->json($provinsi, 200);
     }
 
     public function getKabupaten($id)
@@ -212,9 +216,8 @@ class AddressController extends Controller
         if (is_null($kabupaten)) {
             return response()->json([
                 'message' => 'The data was invalid.',
-                'errors' => [
-                    'kabupaten' => ['Data not found!'],
-                ]], 404);
+                'errors' => ['Data not found!'],
+            ], 404);
         }
 
         return response()->json($kabupaten, 200);
@@ -231,9 +234,8 @@ class AddressController extends Controller
         if (is_null($kecamatan)) {
             return response()->json([
                 'message' => 'The data was invalid.',
-                'errors' => [
-                    'kecamatan' => ['Data not found!'],
-                ]], 404);
+                'errors' => ['Data not found!'],
+            ], 404);
         }
 
         return response()->json($kecamatan, 200);
@@ -250,9 +252,8 @@ class AddressController extends Controller
         if (is_null($kelurahan)) {
             return response()->json([
                 'message' => 'The data was invalid.',
-                'errors' => [
-                    'kelurahan' => ['Data not found!'],
-                ]], 404);
+                'errors' => ['Data not found!'],
+            ], 404);
         }
 
         return response()->json($kelurahan, 200);

@@ -11,7 +11,9 @@ class AuthController extends Controller
 {
     public function signup(Request $request)
     {
-        $this->validate($request, [
+
+        $validate = Validator::make($request->all(), [
+
             'username' => 'required|min:3|max:25|unique:users',
             'firstname' => 'required|min:3|max:25',
             'lastname' => 'required|min:3|max:25',
@@ -20,6 +22,15 @@ class AuthController extends Controller
             'password' => 'required|min:8|confirmed',
             'phonenumber' => 'required|numeric|digits_between:10,12|unique:users',
         ]);
+
+        if ($validate->fails()) {
+            $errors = $validate->errors()->all();
+
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $errors,
+            ], 401);
+        }
 
         $auth = User::create([
             'username' => $request->json('username'),
@@ -30,8 +41,8 @@ class AuthController extends Controller
             'password' => bcrypt($request->json('password')),
             'phonenumber' => strval($request->json('phonenumber')),
             'imageprofile' => $request->json('imageprofile'),
-            'role' => $request->json('role'),
-            'status' => $request->json('status'),
+            'role' => 'admin',
+            'status' => 'inactive',
             'update_by' => $request->json('update_by'),
         ]);
 
@@ -55,8 +66,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'The given data was invalid.',
-                'errors' =>
-                $errors,
+                'errors' => $errors,
             ], 401);
         }
 
@@ -82,16 +92,24 @@ class AuthController extends Controller
 
         $user = User::find($request->user()->id);
 
-        if ($user->role == 'admin' && $user->isVerified == false) {
+        if ($user->role == 'user') {
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => ['Access is not allowed!'],
+            ], 403);
+
+        } else if ($user->role == 'admin' && $user->isVerified == false && $user->status == 'inactive') {
             return response()->json([
                 'message' => 'The user was invalid.',
                 'errors' => ['This account is still not usable! Please contact admin for more info.'],
             ], 403);
+
         } elseif ($user->role == 'admin' && $user->status == 'inactive') {
             return response()->json([
                 'message' => 'The user was invalid.',
                 'errors' => ['This account can no longer be used!'],
             ], 403);
+
         }
 
         // all good so return the token
@@ -106,16 +124,25 @@ class AuthController extends Controller
                 'phonenumber' => $user->phonenumber,
                 'imageprofile' => $user->imageprofile,
                 'role' => $user->role,
-
             ]
         );
     }
 
     public function signout(Request $request)
     {
-        $this->validate($request, [
+
+        $validator = Validator::make($request->all(), [
             'username' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $errors,
+            ], 401);
+        }
 
         $credentials = $request->only('username');
         $token = null;

@@ -11,8 +11,8 @@ class Article extends Model
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'title', 'slug', 'body','gallery_id','user_id',
-        'category_id'
+        'title', 'slug', 'body', 'gallery_id', 'user_id',
+        'category_id', 'created_by',
     ];
 
     public function user()
@@ -33,5 +33,11 @@ class Article extends Model
     public function category()
     {
         return $this->belongsTo('App\Models\Categories');
+    }
+
+    public function articlesdetail()
+    {
+        return $this->hasMany('App\Models\ArticleDetail')
+            ->join('tags', 'tags.id', '=', 'articlesdetail.tag_id');
     }
 }
