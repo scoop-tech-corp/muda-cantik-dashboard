@@ -22,3 +22,7 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('/dashboard/auth/register');
 });
+
+Route::get('/user', function () {
+    return view('/dashboard/user-management/user-management');
+});

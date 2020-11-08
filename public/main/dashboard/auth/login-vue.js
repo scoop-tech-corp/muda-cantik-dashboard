@@ -35,41 +35,43 @@ const loginApp = new Vue({
         'password': this.form.password
       }
 
-      axios.post(this.$refs.baseUrl.value + '/api/admin/auth/signin', formData, { headers: { "Content-Type": "application/json" } })
-      .then(resp => {
-        console.log('Success', resp)
-        this.showAlert = true; this.isSuccess = true;
-        this.message = 'Login Success';
-        this.form.username = ''; this.form.password = '';
-        const getDataLogin = resp.data;
-        localStorage.setItem('muda-cantik', JSON.stringify({
-          email: getDataLogin.email,
-          fullName: getDataLogin.firstname + ' ' + getDataLogin.lastname,
-          imageprofile: getDataLogin.imageprofile,
-          phonenumber: getDataLogin.phonenumber,
-          role: getDataLogin.role,
-          token: getDataLogin.token,
-          user_id: getDataLogin.user_id,
-          username: getDataLogin.username
-        }));
-      })
-      .catch(err => {
-        this.message = '';
-        err.response.data.errors.forEach((element, idx) => {
-          const msg = (idx !== 0 ) ? element + '<br>' : element;
-          this.message += msg;
-        });
+      this.message = '';
+      if (formData.username && formData.password) {
+        axios.post(this.$refs.baseUrl.value + '/api/admin/auth/signin', formData, { headers: { "Content-Type": "application/json" } })
+        .then(resp => {
+          console.log('Success', resp)
+          this.showAlert = true; this.isSuccess = true;
+          this.message = 'Login Success';
+          this.form.username = ''; this.form.password = '';
+          const getDataLogin = resp.data;
+          localStorage.setItem('muda-cantik', JSON.stringify({
+            email: getDataLogin.email,
+            fullName: getDataLogin.firstname + ' ' + getDataLogin.lastname,
+            imageprofile: getDataLogin.imageprofile,
+            phonenumber: getDataLogin.phonenumber,
+            role: getDataLogin.role,
+            token: getDataLogin.token,
+            user_id: getDataLogin.user_id,
+            username: getDataLogin.username
+          }));
+        })
+        .catch(err => {
+          err.response.data.errors.forEach((element, idx) => {
+            const msg = (idx !== 0 ) ? element + '<br>' : element;
+            this.message += msg;
+          });
 
-        this.showAlert = true; this.isSuccess = false;
-      })
-      .finally(() => {
-        setTimeout(() => {
-          if (this.isSuccess) { 
-            this.showAlert = false;
-            location.href = this.$refs.baseUrl.value + '/admin'; 
-          }
-        }, 2000);
-      });
+          this.showAlert = true; this.isSuccess = false;
+        })
+        .finally(() => {
+          setTimeout(() => {
+            if (this.isSuccess) { 
+              this.showAlert = false;
+              location.href = this.$refs.baseUrl.value + '/admin'; 
+            }
+          }, 2000);
+        });
+      }
 		}
 	},
 });

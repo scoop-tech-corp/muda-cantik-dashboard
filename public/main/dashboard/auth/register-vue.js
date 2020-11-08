@@ -10,6 +10,7 @@ const registerApp = new Vue({
       dob: '',
       email: '',
       password: '',
+      confpassword: '',
       phone: '',
       image: '',
     },
@@ -44,12 +45,13 @@ const registerApp = new Vue({
         'birthdate': this.form.dob,
         'email': this.form.email,
         'password': this.form.password,
+        'password_confirmation': this.form.confpassword,
         'phonenumber': this.form.phone,
         'imageprofile': '',
         'role': 'admin',
         'status': 'active'
       }
-
+      this.message = '';
       axios.post(this.$refs.baseUrl.value + '/api/admin/auth/signup', formData, { headers: { "Content-Type": "application/json" } })
       .then(resp => {
         this.showAlert = true; this.isSuccess = true;
@@ -57,16 +59,18 @@ const registerApp = new Vue({
       })
       .catch(err => {
         err.response.data.errors.forEach((element, idx) => {
-          const msg = (idx !== 0 ) ? element + '<br>' : element;
-          this.message += msg;
+          const msg = (idx !== 0 ) ? element : element;
+          this.message += '- ' + msg + '<br/>';
         });
 
         this.showAlert = true; this.isSuccess = false;
       })
       .finally(() => {
         setTimeout(() => {
-          this.showAlert = false;
-          if (this.isSuccess) { location.href = this.$refs.baseUrl.value + '/admin/login'; }
+          if (this.isSuccess) {
+            this.showAlert = false;
+            location.href = this.$refs.baseUrl.value + '/admin/login';
+          }
         }, 2000);
       });
 		}

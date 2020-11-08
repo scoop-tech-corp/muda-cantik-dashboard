@@ -44,7 +44,7 @@
   </div>
   <div v-if="showAlert" class="alert alert-dismissible"
     v-bind:class="{ 'alert-success': isSuccess, 'alert-danger': !isSuccess }">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <button type="button" @click="showAlert = false" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa" v-bind:class="{ 'fa-check': isSuccess, 'fa-ban': !isSuccess }"></i> Alert!</h4>
     @{{message}}
   </div>
@@ -55,13 +55,13 @@
     <form>
       <div class="form-group has-feedback">
         <input type="text" class="form-control" :class="{'error-form-control' : usernameError}"
-          @keyup="usernameKeyup" placeholder="Username" v-model="form.username">
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          @keyup="usernameKeyup" @keydown.enter="onSubmit" placeholder="Username" v-model="form.username">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
         <span class="validate-error">@{{usernameError ? 'Username is required' : ''}}</span>
       </div>
       <div class="form-group has-feedback">
         <input type="password" class="form-control" :class="{'error-form-control' : passwordError}"
-          @keyup="passwordKeyup" placeholder="Password" v-model="form.password">
+          @keyup="passwordKeyup" @keydown.enter="onSubmit" placeholder="Password" v-model="form.password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         <span class="validate-error">@{{passwordError ? 'Password is required' : ''}}</span>
       </div>
