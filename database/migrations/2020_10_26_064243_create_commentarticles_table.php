@@ -21,8 +21,8 @@ class CreateCommentarticlesTable extends Migration
 
             $table->boolean('isDeleted')->nullable()->default(false);
             $table->string('created_by');
-            $table->string('update_by');
-            $table->string('deleted_by');
+            $table->string('update_by')->nullable();
+            $table->string('deleted_by')->nullable();
             $table->timestamp('deleted_at',0)->nullable();
             $table->timestamps();
 

@@ -45,6 +45,13 @@ class CategoriesController extends Controller
 
     public function create(Request $request)
     {
+        if ($request->user()->role == 'user') {
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => ['Access is not allowed!'],
+            ], 403);
+        }
+        
         $validate = Validator::make($request->all(), [
 
             'categoriesname' => 'required|min:3|max:20|unique:categories',
@@ -98,6 +105,13 @@ class CategoriesController extends Controller
 
     public function update(Request $request, $id)
     {
+        if ($request->user()->role == 'user') {
+            return response()->json([
+                'message' => 'The user role was invalid.',
+                'errors' => ['Access is not allowed!'],
+            ], 403);
+        }
+
         $validate = Validator::make($request->all(), [
             'categoriesname' => 'required|min:3|max:20',
             'description' => 'required|min:5',
@@ -122,12 +136,12 @@ class CategoriesController extends Controller
                 ]], 404);
         }
 
-        if ($request->user()->id != $cat->user_id) {
-            return response()->json([
-                'message' => 'The user was invalid.',
-                'errors' => ['Access is not allowed!'],
-            ], 403);
-        }
+        // if ($request->user()->id != $cat->user_id) {
+        //     return response()->json([
+        //         'message' => 'The user was invalid.',
+        //         'errors' => ['Access is not allowed!'],
+        //     ], 403);
+        // }
 
         $cat->categoriesname = $request->categoriesname;
         $cat->description = $request->description;
