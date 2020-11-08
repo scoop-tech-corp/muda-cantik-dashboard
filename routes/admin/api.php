@@ -71,5 +71,12 @@ Route::group(['middleware' => ['api']], function () {
         Route::post('/gallery', 'GalleryController@create');
         Route::delete('/gallery/{id}', 'GalleryController@delete');
         Route::put('/gallery/{id}', 'GalleryController@update');
+
+        //comment article
+        Route::post('/commentarticle/{id}', 'CommentArticleController@create');
+        Route::get('/commentarticle', 'CommentArticleController@index');
+        Route::get('/commentarticle/{id}', 'CommentArticleController@getById');
+        Route::put('/commentarticle/{id}', 'CommentArticleController@update');
+        Route::delete('/commentarticle/{id}', 'CommentArticleController@delete');
     });
 });
