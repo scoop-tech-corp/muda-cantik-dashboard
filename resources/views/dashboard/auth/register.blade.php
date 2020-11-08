@@ -40,6 +40,7 @@
   <!-- Register Custom Css -->
   <link rel="stylesheet" type='text/css' href="{{ asset('main/dashboard/auth/register.css') }}">
   <link rel="stylesheet" type='text/css' href="{{ asset('main/dashboard/alert-custom.css') }}">
+  <link rel="stylesheet" type='text/css' href="{{ asset('main/dashboard/input-custom.css') }}">
 </head>
 <body class="hold-transition register-page">
 <div id="register-app" class="register-box">
@@ -49,9 +50,9 @@
   </div>
   <div v-if="showAlert" class="alert alert-dismissible"
     v-bind:class="{ 'alert-success': isSuccess, 'alert-danger': !isSuccess }">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <button type="button" @click="showAlert = false" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa" v-bind:class="{ 'fa-check': isSuccess, 'fa-ban': !isSuccess }"></i> Alert!</h4>
-    @{{message}}
+    <div v-html="message"></div>
   </div>
   <div class="register-box-body">
     <p class="login-box-msg">Register a new account admin</p>
@@ -81,6 +82,10 @@
       </div>
       <div class="form-group has-feedback">
         <input type="password" class="form-control" placeholder="Password" v-model="form.password">
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" placeholder="Confirm Password" v-model="form.confpassword">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">

@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="{{ asset('bower_components/Ionicons/css/ionicons.min.css') }}">
   <!-- jvectormap -->
   <link rel="stylesheet" href="{{ asset('bower_components/jvectormap/jquery-jvectormap.css') }}">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="{{ asset('bower_components/datatables/css/dataTables.bootstrap.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('dist/css/AdminLTE.min.css') }}">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -42,7 +44,7 @@
     <input ref="baseUrl" type="hidden" value="{{ url('/') }}"/>
 		<header class="main-header">
 			<!-- Logo -->
-			<a href="index2.html" class="logo">
+			<a href="{{ url('/admin') }}" class="logo">
 				<!-- mini logo for sidebar mini 50x50 pixels -->
 				<span class="logo-mini"><b>A</b>LT</span>
 				<!-- logo for regular state and mobile devices -->
@@ -125,8 +127,9 @@
 
 				<!-- sidebar menu: : style can be found in sidebar.less -->
 				<ul class="sidebar-menu" data-widget="tree">
-					<li class="header">MAIN NAVIGATION</li>
-					<li class="treeview">
+          <li class="header">MAIN NAVIGATION</li>
+          <li><a href="{{ url('/admin/user') }}"><i class="fa fa-book"></i> <span>User Management</span></a></li>
+					{{-- <li class="treeview">
 						<a href="#">
 							<i class="fa fa-dashboard"></i>
 							<span>MAIN MENU</span>
@@ -140,7 +143,7 @@
 							<li><a href="#"></i>Menu 3</a></li>
 							<li><a href="#"><i class="fa fa-circle-o"></i>Menu 4</a></li>
 						</ul>
-					</li>
+					</li> --}}
 				</ul>
 			</section>
 			<!-- /.sidebar -->
@@ -155,7 +158,7 @@
 					<small>Version 1.0</small>
 				</h1>
 				<ol class="breadcrumb">
-					<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+					<li><a href="{{ url('/admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
 					<li class="active">Dashboard</li>
 				</ol>
 			</section>
@@ -192,12 +195,15 @@
 		<div class="control-sidebar-bg"></div>
 
 	</div>
-	<!-- ./wrapper -->
+  <!-- ./wrapper -->
 
     <!-- jQuery 3 -->
     <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
     <!-- Bootstrap 3.3.7 -->
     <script src="{{ asset('bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
+    @yield('vue-content')
+
     <!-- FastClick -->
     <script src="{{ asset('bower_components/fastclick/lib/fastclick.js') }}"></script>
     <!-- AdminLTE App -->
@@ -207,14 +213,19 @@
     <!-- jvectormap  -->
     <script src="{{ asset('plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
     <script src="{{ asset('plugins/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
+    <!-- DataTables -->
+    <script src="{{ asset('bower_components/datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('bower_components/datatables/js/dataTables.bootstrap.min.js') }}"></script>
     <!-- SlimScroll -->
     <script src="{{ asset('bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
     <!-- ChartJS -->
     <script src="{{ asset('bower_components/chart.js/Chart.js') }}"></script>
+
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dist/js/pages/dashboard2.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('dist/js/demo.js') }}"></script>
+    @yield('script-content')
     <script src="{{ asset('main/dashboard/master-vue.js') }}"></script>
 </body>
 </html>

@@ -39,8 +39,7 @@ const masterApp = new Vue({
         location.href = this.$refs.baseUrl.value + '/admin/login';
       })
       .catch(err => {
-        // this.showAlert = true; this.isSuccess = false;
-        // this.message = 'Something when wrong!';
+        console.log('error nich', err);
       })
       .finally(() => {
         // setTimeout(() => {
